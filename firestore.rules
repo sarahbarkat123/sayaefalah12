@@ -1,0 +1,43 @@
+rules_version = '2';
+
+// Firestore Rules
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Ambulance Drivers - public access
+    match /ambulanceDrivers/{driverId} {
+      allow read, write: if true;
+    }
+
+    // Users collection - public access for now (dev mode)
+    match /users/{userId} {
+      allow read, write: if true;
+    }
+
+    // Adoption Applications - public access
+    match /adoptionApplications/{docId} {
+      allow read, write: if true;
+    }
+
+    // Missing Reports - public create/read
+    match /missingReports/{document=**} {
+      allow create, read: if true;
+    }
+
+    // Missing Persons - public create/read
+    match /missingPersons/{document=**} {
+      allow create, read: if true;
+    }
+  }
+}
+
+// 📦 Firebase Storage Rules
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{allPaths=**} {
+      allow read, write: if true;
+    }
+  }
+}
+
+
