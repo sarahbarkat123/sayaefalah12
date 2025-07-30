@@ -713,56 +713,201 @@
 
 
 
-
 import React, { useState } from 'react';
-import { auth, db } from '../firebase';
-
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-} from 'firebase/auth';
-import { doc, setDoc } from 'firebase/firestore';
 
 interface AuthFormProps {
   onClose: () => void;
   onSuccess: () => void;
+  formType: 'missing' | 'adoption';
 }
 
-const AuthForm = ({ onClose, onSuccess }: AuthFormProps) => {
+const AuthForm = ({ onClose, onSuccess, formType }: AuthFormProps) => {
   const [isSignUp, setIsSignUp] = useState(false);
-  const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
 
   const toggleToSignUp = () => setIsSignUp(true);
   const toggleToSignIn = () => setIsSignUp(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-    try {
-      if (isSignUp) {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
-        await setDoc(doc(db, 'userManual', user.uid), {
-          uid: user.uid,
-          email: user.email,
-          fullName: fullName,
-          createdAt: new Date(),
-        });
-      } else {
-        await signInWithEmailAndPassword(auth, email, password);
-      }
-      onSuccess();
-    } catch (err: any) {
-      setError(err.message);
-    }
-  };
-
   return (
     <div className="auth-page">
-      <style>{/* (same CSS you wrote above) */}</style>
+      <style>{`
+        .auth-page {
+          position: fixed;
+          inset: 0;
+          z-index: 50;
+          background-color: rgba(0, 0, 0, 0.5);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-family: sans-serif;
+        }
+
+        .auth-wrapper {
+          background-color: #f0f8ff;
+          border-radius: 10px;
+          box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+          max-width: 768px;
+          width: 100%;
+          overflow: hidden;
+          position: relative;
+        }
+
+        .auth-heading {
+          text-align: center;
+          font-size: 30px;
+          margin: 10px 0;
+          color: #003366;
+          font-weight: bold;
+        }
+
+        .container {
+          position: relative;
+          width: 100%;
+          display: flex;
+          min-height: 580px;
+          overflow: hidden;
+        }
+
+        .form-container {
+          position: absolute;
+          top: 0;
+          height: 100%;
+          transition: all 0.6s ease-in-out;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          width: 50%;
+          padding: 0 40px;
+          text-align: center;
+          background-color: #ffffff;
+        }
+
+        .sign-in-container {
+          left: 0;
+          z-index: 2;
+        }
+
+        .sign-up-container {
+          left: 0;
+          opacity: 0;
+          z-index: 1;
+        }
+
+        .container.right-panel-active .sign-in-container {
+          transform: translateX(100%);
+        }
+
+        .container.right-panel-active .sign-up-container {
+          transform: translateX(100%);
+          opacity: 1;
+          z-index: 5;
+          animation: show 0.6s;
+        }
+
+        @keyframes show {
+          0%, 49.99% { opacity: 0; z-index: 1; }
+          50%, 100% { opacity: 1; z-index: 5; }
+        }
+
+        input {
+          background-color: #eef6fb;
+          border: none;
+          padding: 12px 20px;
+          margin: 10px 0;
+          width: 100%;
+          border-radius: 5px;
+          font-size: 16px;
+        }
+
+        button {
+          border-radius: 20px;
+          border: 1px solid #0077b6;
+          background-color: #0077b6;
+          color: #fff;
+          font-size: 16px;
+          font-weight: bold;
+          padding: 12px 45px;
+          margin-top: 15px;
+          cursor: pointer;
+          transition: transform 80ms ease-in;
+        }
+
+        button.ghost {
+          background-color: transparent;
+          border-color: #ffffff;
+        }
+
+        .overlay-container {
+          position: absolute;
+          top: 0;
+          left: 50%;
+          width: 50%;
+          height: 100%;
+          overflow: hidden;
+          z-index: 100;
+          transition: transform 0.6s ease-in-out;
+        }
+
+        .container.right-panel-active .overlay-container {
+          transform: translateX(-100%);
+        }
+
+        .overlay {
+          background: linear-gradient(to right, #0077b6, #00b4d8);
+          background-size: cover;
+          position: relative;
+          left: -100%;
+          height: 100%;
+          width: 200%;
+          transform: translateX(0);
+          transition: transform 0.6s ease-in-out;
+        }
+
+        .container.right-panel-active .overlay {
+          transform: translateX(50%);
+        }
+
+        .overlay-panel {
+          position: absolute;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          padding: 0 40px;
+          text-align: center;
+          height: 100%;
+          width: 50%;
+          color: white;
+        }
+
+        .overlay-left {
+          transform: translateX(-20%);
+        }
+
+        .container.right-panel-active .overlay-left {
+          transform: translateX(0);
+        }
+
+        .overlay-right {
+          right: 0;
+          transform: translateX(0);
+        }
+
+        .container.right-panel-active .overlay-right {
+          transform: translateX(20%);
+        }
+
+        .close-btn {
+          position: absolute;
+          top: -20px;
+          right: -20px;
+          font-size: 30px;
+          background: transparent;
+          border: none;
+          color: #333;
+          cursor: pointer;
+        }
+      `}</style>
 
       <div className="auth-wrapper">
         <button className="close-btn" onClick={onClose}>×</button>
@@ -770,53 +915,21 @@ const AuthForm = ({ onClose, onSuccess }: AuthFormProps) => {
         <div className={`container ${isSignUp ? 'right-panel-active' : ''}`}>
           {/* Sign Up Form */}
           <div className="form-container sign-up-container">
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={(e) => { e.preventDefault(); onSuccess(); }}>
               <h2>Create Account</h2>
-              <input
-                type="text"
-                placeholder="Full Name"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-                required
-              />
-              <input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-              <input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-              {error && <p style={{ color: 'red' }}>{error}</p>}
+              <input type="text" placeholder="Full Name" required />
+              <input type="email" placeholder="Email" required />
+              <input type="password" placeholder="Password" required />
               <button type="submit">Sign Up</button>
             </form>
           </div>
 
           {/* Sign In Form */}
           <div className="form-container sign-in-container">
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={(e) => { e.preventDefault(); onSuccess(); }}>
               <h2>Sign In</h2>
-              <input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-              <input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-              {error && <p style={{ color: 'red' }}>{error}</p>}
+              <input type="email" placeholder="Email" required />
+              <input type="password" placeholder="Password" required />
               <button type="submit">Sign In</button>
             </form>
           </div>
@@ -843,3 +956,7 @@ const AuthForm = ({ onClose, onSuccess }: AuthFormProps) => {
 };
 
 export default AuthForm;
+
+
+
+
