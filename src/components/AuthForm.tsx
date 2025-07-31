@@ -713,7 +713,663 @@
 
 
 
+// import React, { useState } from 'react';
+
+// interface AuthFormProps {
+//   onClose: () => void;
+//   onSuccess: () => void;
+//   formType: 'missing' | 'adoption';
+// }
+
+// const AuthForm = ({ onClose, onSuccess, formType }: AuthFormProps) => {
+//   const [isSignUp, setIsSignUp] = useState(false);
+
+//   const toggleToSignUp = () => setIsSignUp(true);
+//   const toggleToSignIn = () => setIsSignUp(false);
+
+//   return (
+//     <div className="auth-page">
+//       <style>{`
+//         .auth-page {
+//           position: fixed;
+//           inset: 0;
+//           z-index: 50;
+//           background-color: rgba(0, 0, 0, 0.5);
+//           display: flex;
+//           align-items: center;
+//           justify-content: center;
+//           font-family: sans-serif;
+//         }
+
+//         .auth-wrapper {
+//           background-color: #f0f8ff;
+//           border-radius: 10px;
+//           box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+//           max-width: 768px;
+//           width: 100%;
+//           overflow: hidden;
+//           position: relative;
+//         }
+
+//         .auth-heading {
+//           text-align: center;
+//           font-size: 30px;
+//           margin: 10px 0;
+//           color: #003366;
+//           font-weight: bold;
+//         }
+
+//         .container {
+//           position: relative;
+//           width: 100%;
+//           display: flex;
+//           min-height: 580px;
+//           overflow: hidden;
+//         }
+
+//         .form-container {
+//           position: absolute;
+//           top: 0;
+//           height: 100%;
+//           transition: all 0.6s ease-in-out;
+//           display: flex;
+//           flex-direction: column;
+//           justify-content: center;
+//           align-items: center;
+//           width: 50%;
+//           padding: 0 40px;
+//           text-align: center;
+//           background-color: #ffffff;
+//         }
+
+//         .sign-in-container {
+//           left: 0;
+//           z-index: 2;
+//         }
+
+//         .sign-up-container {
+//           left: 0;
+//           opacity: 0;
+//           z-index: 1;
+//         }
+
+//         .container.right-panel-active .sign-in-container {
+//           transform: translateX(100%);
+//         }
+
+//         .container.right-panel-active .sign-up-container {
+//           transform: translateX(100%);
+//           opacity: 1;
+//           z-index: 5;
+//           animation: show 0.6s;
+//         }
+
+//         @keyframes show {
+//           0%, 49.99% { opacity: 0; z-index: 1; }
+//           50%, 100% { opacity: 1; z-index: 5; }
+//         }
+
+//         input {
+//           background-color: #eef6fb;
+//           border: none;
+//           padding: 12px 20px;
+//           margin: 10px 0;
+//           width: 100%;
+//           border-radius: 5px;
+//           font-size: 16px;
+//         }
+
+//         button {
+//           border-radius: 20px;
+//           border: 1px solid #0077b6;
+//           background-color: #0077b6;
+//           color: #fff;
+//           font-size: 16px;
+//           font-weight: bold;
+//           padding: 12px 45px;
+//           margin-top: 15px;
+//           cursor: pointer;
+//           transition: transform 80ms ease-in;
+//         }
+
+//         button.ghost {
+//           background-color: transparent;
+//           border-color: #ffffff;
+//         }
+
+//         .overlay-container {
+//           position: absolute;
+//           top: 0;
+//           left: 50%;
+//           width: 50%;
+//           height: 100%;
+//           overflow: hidden;
+//           z-index: 100;
+//           transition: transform 0.6s ease-in-out;
+//         }
+
+//         .container.right-panel-active .overlay-container {
+//           transform: translateX(-100%);
+//         }
+
+//         .overlay {
+//           background: linear-gradient(to right, #0077b6, #00b4d8);
+//           background-size: cover;
+//           position: relative;
+//           left: -100%;
+//           height: 100%;
+//           width: 200%;
+//           transform: translateX(0);
+//           transition: transform 0.6s ease-in-out;
+//         }
+
+//         .container.right-panel-active .overlay {
+//           transform: translateX(50%);
+//         }
+
+//         .overlay-panel {
+//           position: absolute;
+//           display: flex;
+//           flex-direction: column;
+//           align-items: center;
+//           justify-content: center;
+//           padding: 0 40px;
+//           text-align: center;
+//           height: 100%;
+//           width: 50%;
+//           color: white;
+//         }
+
+//         .overlay-left {
+//           transform: translateX(-20%);
+//         }
+
+//         .container.right-panel-active .overlay-left {
+//           transform: translateX(0);
+//         }
+
+//         .overlay-right {
+//           right: 0;
+//           transform: translateX(0);
+//         }
+
+//         .container.right-panel-active .overlay-right {
+//           transform: translateX(20%);
+//         }
+
+//         .close-btn {
+//           position: absolute;
+//           top: -20px;
+//           right: -20px;
+//           font-size: 30px;
+//           background: transparent;
+//           border: none;
+//           color: #333;
+//           cursor: pointer;
+//         }
+//       `}</style>
+
+//       <div className="auth-wrapper">
+//         <button className="close-btn" onClick={onClose}>×</button>
+//         <h2 className="auth-heading">Saya-e-Falah</h2>
+//         <div className={`container ${isSignUp ? 'right-panel-active' : ''}`}>
+//           {/* Sign Up Form */}
+//           <div className="form-container sign-up-container">
+//             <form onSubmit={(e) => { e.preventDefault(); onSuccess(); }}>
+//               <h2>Create Account</h2>
+//               <input type="text" placeholder="Full Name" required />
+//               <input type="email" placeholder="Email" required />
+//               <input type="password" placeholder="Password" required />
+//               <button type="submit">Sign Up</button>
+//             </form>
+//           </div>
+
+//           {/* Sign In Form */}
+//           <div className="form-container sign-in-container">
+//             <form onSubmit={(e) => { e.preventDefault(); onSuccess(); }}>
+//               <h2>Sign In</h2>
+//               <input type="email" placeholder="Email" required />
+//               <input type="password" placeholder="Password" required />
+//               <button type="submit">Sign In</button>
+//             </form>
+//           </div>
+
+//           {/* Overlay */}
+//           <div className="overlay-container">
+//             <div className="overlay">
+//               <div className="overlay-panel overlay-left">
+//                 <h2>Welcome Back!</h2>
+//                 <p>To stay connected, please sign in</p>
+//                 <button className="ghost" onClick={toggleToSignIn}>Sign In</button>
+//               </div>
+//               <div className="overlay-panel overlay-right">
+//                 <h2>Hello, Friend!</h2>
+//                 <p>Start your journey with Saya-e-Falah</p>
+//                 <button className="ghost" onClick={toggleToSignUp}>Sign Up</button>
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default AuthForm;
+
+
+
+
+// import React, { useState } from 'react';
+// import { auth, db } from '../firebase';
+// import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
+// import { doc, setDoc } from 'firebase/firestore';
+
+// interface AuthFormProps {
+//   onClose: () => void;
+//   onSuccess: () => void;
+//   formType: 'missing' | 'adoption';
+// }
+
+// const AuthForm = ({ onClose, onSuccess, formType }: AuthFormProps) => {
+//   const [isSignUp, setIsSignUp] = useState(false);
+//   const [formData, setFormData] = useState({
+//     name: '',
+//     email: '',
+//     password: ''
+//   });
+//   const [error, setError] = useState('');
+//   const [loading, setLoading] = useState(false);
+
+//   const toggleToSignUp = () => setIsSignUp(true);
+//   const toggleToSignIn = () => setIsSignUp(false);
+
+//   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+//     const { name, value } = e.target;
+//     setFormData(prev => ({
+//       ...prev,
+//       [name]: value
+//     }));
+//   };
+
+//   const handleSignIn = async (e: React.FormEvent) => {
+//     e.preventDefault();
+//     setLoading(true);
+//     setError('');
+    
+//     try {
+//       await signInWithEmailAndPassword(auth, formData.email, formData.password);
+//       onSuccess();
+//     } catch (error) {
+//       console.error("Login error:", error);
+//       if (error.code === 'auth/invalid-credential') {
+//         setError('Invalid email or password');
+//       } else if (error.code === 'auth/too-many-requests') {
+//         setError('Account temporarily disabled due to many failed login attempts');
+//       } else {
+//         setError('Login failed. Please try again.');
+//       }
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   const handleSignUp = async (e: React.FormEvent) => {
+//     e.preventDefault();
+//     setLoading(true);
+//     setError('');
+    
+//     try {
+//       const userCredential = await createUserWithEmailAndPassword(
+//         auth,
+//         formData.email,
+//         formData.password
+//       );
+
+//       const user = userCredential.user;
+
+//       await setDoc(doc(db, "users", user.uid), {
+//         name: formData.name,
+//         email: formData.email,
+//         createdAt: new Date(),
+//       });
+
+//       onSuccess();
+//     } catch (error) {
+//       console.error("Signup error:", error);
+//       if (error.code === "auth/email-already-in-use") {
+//         setError("This email is already registered. Try logging in.");
+//       } else if (error.code === "auth/weak-password") {
+//         setError("Password should be at least 6 characters");
+//       } else if (error.code === "auth/invalid-email") {
+//         setError("Please enter a valid email address");
+//       } else {
+//         setError("Registration failed. Please try again.");
+//       }
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   return (
+//     <div className="auth-page">
+//       <style>{`
+//         .auth-page {
+//           position: fixed;
+//           inset: 0;
+//           z-index: 50;
+//           background-color: rgba(0, 0, 0, 0.5);
+//           display: flex;
+//           align-items: center;
+//           justify-content: center;
+//           font-family: sans-serif;
+//         }
+
+//         .auth-wrapper {
+//           background-color: #f0f8ff;
+//           border-radius: 10px;
+//           box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+//           max-width: 768px;
+//           width: 100%;
+//           overflow: hidden;
+//           position: relative;
+//         }
+
+//         .auth-heading {
+//           text-align: center;
+//           font-size: 30px;
+//           margin: 10px 0;
+//           color: #003366;
+//           font-weight: bold;
+//         }
+
+//         .container {
+//           position: relative;
+//           width: 100%;
+//           display: flex;
+//           min-height: 580px;
+//           overflow: hidden;
+//         }
+
+//         .form-container {
+//           position: absolute;
+//           top: 0;
+//           height: 100%;
+//           transition: all 0.6s ease-in-out;
+//           display: flex;
+//           flex-direction: column;
+//           justify-content: center;
+//           align-items: center;
+//           width: 50%;
+//           padding: 0 40px;
+//           text-align: center;
+//           background-color: #ffffff;
+//         }
+
+//         .sign-in-container {
+//           left: 0;
+//           z-index: 2;
+//         }
+
+//         .sign-up-container {
+//           left: 0;
+//           opacity: 0;
+//           z-index: 1;
+//         }
+
+//         .container.right-panel-active .sign-in-container {
+//           transform: translateX(100%);
+//         }
+
+//         .container.right-panel-active .sign-up-container {
+//           transform: translateX(100%);
+//           opacity: 1;
+//           z-index: 5;
+//           animation: show 0.6s;
+//         }
+
+//         @keyframes show {
+//           0%, 49.99% { opacity: 0; z-index: 1; }
+//           50%, 100% { opacity: 1; z-index: 5; }
+//         }
+
+//         input {
+//           background-color: #eef6fb;
+//           border: none;
+//           padding: 12px 20px;
+//           margin: 10px 0;
+//           width: 100%;
+//           border-radius: 5px;
+//           font-size: 16px;
+//         }
+
+//         button {
+//           border-radius: 20px;
+//           border: 1px solid #0077b6;
+//           background-color: #0077b6;
+//           color: #fff;
+//           font-size: 16px;
+//           font-weight: bold;
+//           padding: 12px 45px;
+//           margin-top: 15px;
+//           cursor: pointer;
+//           transition: transform 80ms ease-in;
+//         }
+
+//         button.ghost {
+//           background-color: transparent;
+//           border-color: #ffffff;
+//         }
+
+//         .overlay-container {
+//           position: absolute;
+//           top: 0;
+//           left: 50%;
+//           width: 50%;
+//           height: 100%;
+//           overflow: hidden;
+//           z-index: 100;
+//           transition: transform 0.6s ease-in-out;
+//         }
+
+//         .container.right-panel-active .overlay-container {
+//           transform: translateX(-100%);
+//         }
+
+//         .overlay {
+//           background: linear-gradient(to right, #0077b6, #00b4d8);
+//           background-size: cover;
+//           position: relative;
+//           left: -100%;
+//           height: 100%;
+//           width: 200%;
+//           transform: translateX(0);
+//           transition: transform 0.6s ease-in-out;
+//         }
+
+//         .container.right-panel-active .overlay {
+//           transform: translateX(50%);
+//         }
+
+//         .overlay-panel {
+//           position: absolute;
+//           display: flex;
+//           flex-direction: column;
+//           align-items: center;
+//           justify-content: center;
+//           padding: 0 40px;
+//           text-align: center;
+//           height: 100%;
+//           width: 50%;
+//           color: white;
+//         }
+
+//         .overlay-left {
+//           transform: translateX(-20%);
+//         }
+
+//         .container.right-panel-active .overlay-left {
+//           transform: translateX(0);
+//         }
+
+//         .overlay-right {
+//           right: 0;
+//           transform: translateX(0);
+//         }
+
+//         .container.right-panel-active .overlay-right {
+//           transform: translateX(20%);
+//         }
+
+//         .close-btn {
+//           position: absolute;
+//           top: -20px;
+//           right: -20px;
+//           font-size: 30px;
+//           background: transparent;
+//           border: none;
+//           color: #333;
+//           cursor: pointer;
+//         }
+
+//         .error-message {
+//           color: red;
+//           text-align: center;
+//           margin-bottom: 10px;
+//         }
+
+//         .loading-spinner {
+//           border: 3px solid rgba(255, 255, 255, 0.3);
+//           border-radius: 50%;
+//           border-top: 3px solid #fff;
+//           width: 20px;
+//           height: 20px;
+//           animation: spin 1s linear infinite;
+//           display: inline-block;
+//           vertical-align: middle;
+//           margin-right: 8px;
+//         }
+
+//         @keyframes spin {
+//           0% { transform: rotate(0deg); }
+//           100% { transform: rotate(360deg); }
+//         }
+//       `}</style>
+
+//       <div className="auth-wrapper">
+//         <button className="close-btn" onClick={onClose}>×</button>
+//         <h2 className="auth-heading">Saya-e-Falah</h2>
+//         {error && <div className="error-message">{error}</div>}
+//         <div className={`container ${isSignUp ? 'right-panel-active' : ''}`}>
+//           {/* Sign Up Form */}
+//           <div className="form-container sign-up-container">
+//             <form onSubmit={handleSignUp}>
+//               <h2>Create Account</h2>
+//               <input 
+//                 type="text" 
+//                 name="name"
+//                 placeholder="Full Name" 
+//                 required 
+//                 value={formData.name}
+//                 onChange={handleChange}
+//               />
+//               <input 
+//                 type="email" 
+//                 name="email"
+//                 placeholder="Email" 
+//                 required 
+//                 value={formData.email}
+//                 onChange={handleChange}
+//               />
+//               <input 
+//                 type="password" 
+//                 name="password"
+//                 placeholder="Password" 
+//                 required 
+//                 value={formData.password}
+//                 onChange={handleChange}
+//                 minLength={6}
+//               />
+//               <button type="submit" disabled={loading}>
+//                 {loading ? (
+//                   <>
+//                     <span className="loading-spinner"></span>
+//                     Signing Up...
+//                   </>
+//                 ) : (
+//                   "Sign Up"
+//                 )}
+//               </button>
+//             </form>
+//           </div>
+
+//           {/* Sign In Form */}
+//           <div className="form-container sign-in-container">
+//             <form onSubmit={handleSignIn}>
+//               <h2>Sign In</h2>
+//               <input 
+//                 type="email" 
+//                 name="email"
+//                 placeholder="Email" 
+//                 required 
+//                 value={formData.email}
+//                 onChange={handleChange}
+//               />
+//               <input 
+//                 type="password" 
+//                 name="password"
+//                 placeholder="Password" 
+//                 required 
+//                 value={formData.password}
+//                 onChange={handleChange}
+//               />
+//               <button type="submit" disabled={loading}>
+//                 {loading ? (
+//                   <>
+//                     <span className="loading-spinner"></span>
+//                     Signing In...
+//                   </>
+//                 ) : (
+//                   "Sign In"
+//                 )}
+//               </button>
+//             </form>
+//           </div>
+
+//           {/* Overlay */}
+//           <div className="overlay-container">
+//             <div className="overlay">
+//               <div className="overlay-panel overlay-left">
+//                 <h2>Welcome Back!</h2>
+//                 <p>To stay connected, please sign in</p>
+//                 <button className="ghost" onClick={toggleToSignIn}>Sign In</button>
+//               </div>
+//               <div className="overlay-panel overlay-right">
+//                 <h2>Hello, Friend!</h2>
+//                 <p>Start your journey with Saya-e-Falah</p>
+//                 <button className="ghost" onClick={toggleToSignUp}>Sign Up</button>
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default AuthForm;
+
+
+
 import React, { useState } from 'react';
+import { auth, db } from '../firebase';
+import { 
+  signInWithEmailAndPassword, 
+  createUserWithEmailAndPassword,
+  signInWithPopup,
+  GoogleAuthProvider 
+} from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
 
 interface AuthFormProps {
   onClose: () => void;
@@ -723,9 +1379,107 @@ interface AuthFormProps {
 
 const AuthForm = ({ onClose, onSuccess, formType }: AuthFormProps) => {
   const [isSignUp, setIsSignUp] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: ''
+  });
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const toggleToSignUp = () => setIsSignUp(true);
   const toggleToSignIn = () => setIsSignUp(false);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSignIn = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    
+    try {
+      await signInWithEmailAndPassword(auth, formData.email, formData.password);
+      onSuccess();
+    } catch (error: any) {
+      console.error("Login error:", error);
+      if (error.code === 'auth/invalid-credential') {
+        setError('Invalid email or password');
+      } else if (error.code === 'auth/too-many-requests') {
+        setError('Account temporarily disabled due to many failed login attempts');
+      } else {
+        setError('Login failed. Please try again.');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSignUp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        formData.email,
+        formData.password
+      );
+
+      const user = userCredential.user;
+
+      await setDoc(doc(db, "users", user.uid), {
+        name: formData.name,
+        email: formData.email,
+        createdAt: new Date(),
+      });
+
+      onSuccess();
+    } catch (error: any) {
+      console.error("Signup error:", error);
+      if (error.code === "auth/email-already-in-use") {
+        setError("This email is already registered. Try logging in.");
+      } else if (error.code === "auth/weak-password") {
+        setError("Password should be at least 6 characters");
+      } else if (error.code === "auth/invalid-email") {
+        setError("Please enter a valid email address");
+      } else {
+        setError("Registration failed. Please try again.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const signInWithGoogle = async () => {
+    try {
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+      
+      // Check if the user is new or existing
+      const isNewUser = result.user.metadata.creationTime === result.user.metadata.lastSignInTime;
+      
+      if (isNewUser) {
+        // Add user to Firestore if they're new
+        await setDoc(doc(db, "users", result.user.uid), {
+          name: result.user.displayName || 'Google User',
+          email: result.user.email,
+          createdAt: new Date(),
+        });
+      }
+      
+      onSuccess();
+    } catch (error: any) {
+      console.error("Google sign-in error:", error);
+      setError(error.message || 'Google sign-in failed. Please try again.');
+    }
+  };
 
   return (
     <div className="auth-page">
@@ -907,30 +1661,179 @@ const AuthForm = ({ onClose, onSuccess, formType }: AuthFormProps) => {
           color: #333;
           cursor: pointer;
         }
+
+        .error-message {
+          color: red;
+          text-align: center;
+          margin-bottom: 10px;
+        }
+
+        .loading-spinner {
+          border: 3px solid rgba(255, 255, 255, 0.3);
+          border-radius: 50%;
+          border-top: 3px solid #fff;
+          width: 20px;
+          height: 20px;
+          animation: spin 1s linear infinite;
+          display: inline-block;
+          vertical-align: middle;
+          margin-right: 8px;
+        }
+
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+
+        .google-btn {
+          border-radius: 20px;
+          border: 1px solid #dd4b39;
+          background-color: #dd4b39;
+          color: #fff;
+          font-size: 16px;
+          font-weight: bold;
+          padding: 12px 45px;
+          margin-top: 15px;
+          cursor: pointer;
+          transition: transform 80ms ease-in;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          width: 100%;
+        }
+
+        .google-btn:hover {
+          background-color: #c23321;
+        }
+
+        .divider {
+          display: flex;
+          align-items: center;
+          margin: 20px 0;
+          color: #666;
+        }
+
+        .divider::before, .divider::after {
+          content: "";
+          flex: 1;
+          border-bottom: 1px solid #ddd;
+        }
+
+        .divider::before {
+          margin-right: 10px;
+        }
+
+        .divider::after {
+          margin-left: 10px;
+        }
       `}</style>
 
       <div className="auth-wrapper">
         <button className="close-btn" onClick={onClose}>×</button>
         <h2 className="auth-heading">Saya-e-Falah</h2>
+        {error && <div className="error-message">{error}</div>}
         <div className={`container ${isSignUp ? 'right-panel-active' : ''}`}>
           {/* Sign Up Form */}
           <div className="form-container sign-up-container">
-            <form onSubmit={(e) => { e.preventDefault(); onSuccess(); }}>
+            <form onSubmit={handleSignUp}>
               <h2>Create Account</h2>
-              <input type="text" placeholder="Full Name" required />
-              <input type="email" placeholder="Email" required />
-              <input type="password" placeholder="Password" required />
-              <button type="submit">Sign Up</button>
+              <input 
+                type="text" 
+                name="name"
+                placeholder="Full Name" 
+                required 
+                value={formData.name}
+                onChange={handleChange}
+              />
+              <input 
+                type="email" 
+                name="email"
+                placeholder="Email" 
+                required 
+                value={formData.email}
+                onChange={handleChange}
+              />
+              <input 
+                type="password" 
+                name="password"
+                placeholder="Password" 
+                required 
+                value={formData.password}
+                onChange={handleChange}
+                minLength={6}
+              />
+              <button type="submit" disabled={loading}>
+                {loading ? (
+                  <>
+                    <span className="loading-spinner"></span>
+                    Signing Up...
+                  </>
+                ) : (
+                  "Sign Up"
+                )}
+              </button>
+              
+              <div className="divider">OR</div>
+              
+              <button 
+                type="button" 
+                className="google-btn"
+                onClick={signInWithGoogle}
+                disabled={loading}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+                  <path fill="currentColor" d="M12.545 10.239v3.821h5.445c-.712 2.315-2.647 3.972-5.445 3.972a6.033 6.033 0 110-12.064c1.498 0 2.866.549 3.921 1.453l2.814-2.814A9.969 9.969 0 0012.545 2C7.021 2 2.545 6.477 2.545 12s4.476 10 10 10c8.396 0 10-7.496 10-10 0-.67-.069-1.325-.195-1.955H12.545z"/>
+                </svg>
+                Sign up with Google
+              </button>
             </form>
           </div>
 
           {/* Sign In Form */}
           <div className="form-container sign-in-container">
-            <form onSubmit={(e) => { e.preventDefault(); onSuccess(); }}>
+            <form onSubmit={handleSignIn}>
               <h2>Sign In</h2>
-              <input type="email" placeholder="Email" required />
-              <input type="password" placeholder="Password" required />
-              <button type="submit">Sign In</button>
+              <input 
+                type="email" 
+                name="email"
+                placeholder="Email" 
+                required 
+                value={formData.email}
+                onChange={handleChange}
+              />
+              <input 
+                type="password" 
+                name="password"
+                placeholder="Password" 
+                required 
+                value={formData.password}
+                onChange={handleChange}
+              />
+              <button type="submit" disabled={loading}>
+                {loading ? (
+                  <>
+                    <span className="loading-spinner"></span>
+                    Signing In...
+                  </>
+                ) : (
+                  "Sign In"
+                )}
+              </button>
+              
+              <div className="divider">OR</div>
+              
+              <button 
+                type="button" 
+                className="google-btn"
+                onClick={signInWithGoogle}
+                disabled={loading}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24">
+                  <path fill="currentColor" d="M12.545 10.239v3.821h5.445c-.712 2.315-2.647 3.972-5.445 3.972a6.033 6.033 0 110-12.064c1.498 0 2.866.549 3.921 1.453l2.814-2.814A9.969 9.969 0 0012.545 2C7.021 2 2.545 6.477 2.545 12s4.476 10 10 10c8.396 0 10-7.496 10-10 0-.67-.069-1.325-.195-1.955H12.545z"/>
+                </svg>
+                Sign in with Google
+              </button>
             </form>
           </div>
 
@@ -956,7 +1859,3 @@ const AuthForm = ({ onClose, onSuccess, formType }: AuthFormProps) => {
 };
 
 export default AuthForm;
-
-
-
-
